@@ -1,0 +1,45 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{recipe.name}}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>{{recipe.name}}</h1>
+                <div class="row">
+            <div class="col-md-6">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" class="img-fluid" alt="photo">
+                {% else %}
+                    <img src="{% static 'img/no-image.png' %}" class="img-fluid" alt="photo">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h2>Інгредієнти</h2>
+                <div class="list-group">
+                    {% for recipe_ingredient in recipe.recipeingredient_set.all %}
+                    <label class="list-group-item d-flex gap-2">
+                      <input class="form-check-input flex-shrink-0" type="checkbox" value="" checked="">
+                      <span>
+                        {{ recipe_ingredient.quantity }} {{ recipe_ingredient.ingredient.name }}
+                      </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <p>{{recipe.description}}</p>
+        <p>Калорійність: {{recipe.calories}}</p>
+        <p>Білки: {{recipe.proteins}}</p>
+        <p>Жири: {{recipe.fats}}</p>
+        <p>Вуглеводи: {{recipe.carbohydrates}}</p>
+        <a href="{% url 'recipes_list' %}" class="btn btn-secondary">Назад до списку рецептів</a>
+    </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ingredients List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <h1>Список інгредієнтів</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Назва інгредієнту</th>
+          <th scope="col">Калорійність на 100 гр</th>
+          <th scope="col">Кількість білків на 100 гр</th>
+          <th scope="col">Кількість жирів на 100 гр</th>
+          <th scope="col">Кількість вуглеводів на 100 гр</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+      {% for ingredient in ingredients%}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ingredient.name}}</td>
+          <td>{{ingredient.calories}}</td>
+          <td>{{ingredient.proteins}}</td>
+          <td>{{ingredient.fats}}</td>
+          <td>{{ingredient.carbohydrates}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

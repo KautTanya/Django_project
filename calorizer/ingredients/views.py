@@ -1,8 +1,9 @@
 """ingredients"""
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Ingredient
 
 
-def welcome(request):
+def ingredients_list(request):
     """example"""
-    # print(dir(request))
-    return HttpResponse("Welcome to my Calorizer")
+    ingredients = Ingredient.objects.all()
+    return render(request, 'ingredients/ingredients_list.html', {'ingredients': ingredients})

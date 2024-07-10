@@ -1,9 +1,9 @@
 """Urls"""
 from django.urls import path
-from .views import welcome
+from . import views
 
 
 urlpatterns = [
-    path('', welcome, name='welcome'),
+    path('', views.ingredients_list, name='ingredients_list'),
 
 ]
