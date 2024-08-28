@@ -1,9 +1,16 @@
 """models for recipes"""
 from django.db import models
+from django.utils.text import slugify
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -11,6 +18,12 @@ class Category(models.Model):
 
 class Type(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -18,6 +31,12 @@ class Type(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -25,6 +44,12 @@ class Tag(models.Model):
 
 class Mark(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -32,6 +57,12 @@ class Mark(models.Model):
 
 class Kind(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -39,6 +70,12 @@ class Kind(models.Model):
 
 class Time(models.Model):
     duration = models.CharField(max_length=100)  # Наприклад, "<15 хвилин"
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.duration)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.duration
@@ -46,6 +83,7 @@ class Time(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
     ingredients = models.ManyToManyField('ingredients.Ingredient', related_name='recipes')
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True, related_name='recipes')
@@ -59,6 +97,11 @@ class Recipe(models.Model):
     fats = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     carbohydrates = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

@@ -1,0 +1,175 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Recipes List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .card {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        .card-body {
+            flex: 1;
+        }
+        .card-img {
+            max-width: 250px;
+            max-height: 300px;
+            object-fit: cover;
+        }
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+        }
+        .list-group-item {
+            border-bottom: none;
+        }
+        .text-danger {
+            color: red;
+        }
+        .dropdown-menu {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .dropdown-menu label {
+            cursor: pointer;
+        }
+
+        .border-wrapper {
+            border: 1px solid rgba(0, 0, 0, 0.1); /* Чорний бордер з прозорістю 10% */
+            padding: 20px; /* Додати відступ всередині бордера */
+            border-radius: 5px; /* Додати закруглення країв */
+            background-color: rgba(255, 255, 255, 0.8); /* Напівпрозоре біле тло */
+        }
+    </style>
+</head>
+<body>
+    <header class="p-3 text-bg-dark">
+        <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li>
+              <a href="{% url 'index' %}"
+                 class="nav-link px-2 {% if request.resolver_match.url_name == 'index' %}text-primary{% else %}text-white{% endif %}">
+                  Головна
+              </a>
+          </li>
+          <li>
+              <a href="{% url 'recipes_list' %}"
+                 class="nav-link px-2 {% if request.resolver_match.url_name == 'recipes_list' %}text-primary{% else %}text-white{% endif %}">
+                  Рецепти
+              </a>
+          </li>
+          <li>
+              <a href="{% url 'ingredients_list' %}"
+                 class="nav-link px-2 {% if request.resolver_match.url_name == 'ingredients_list' %}text-primary{% else %}text-white{% endif %}">
+                  Інгредієнти
+              </a>
+          </li>
+          <li>
+              <a href="{% url 'add_recipe' %}"
+                 class="nav-link px-2 {% if request.resolver_match.url_name == 'add_recipe' %}text-primary{% else %}text-white{% endif %}">
+                  Додати рецепт
+              </a>
+          </li>
+<!--          <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
+        </ul>
+
+        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+          <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+        </form>
+
+        <div class="text-end">
+          <button type="button" class="btn btn-outline-light me-2">Увійти</button>
+          <a href="{% url 'register' %}">
+            <button type="button" class="btn btn-primary">Зареєструватися</button>
+          </a>
+        </div>
+      </div>
+    </div>
+    </header>
+
+    <div class="d-flex container">
+        <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary sidebar">
+            <a href="#" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+                <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-5 fw-semibold">Категорії</span>
+            </a>
+            <div class="list-group list-group-flush scrollarea">
+                {% for category in categories %}
+                    <a href="{% url 'get_category' category.slug %}" class="list-group-item list-group-item-action lh-sm" >
+                        <div class="d-flex w-100 align-items-center justify-content-between " >
+                            <strong class="mb-1">{{ category.name }}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+                {% for type in types %}
+                    <a href="{% url 'get_type' type.slug %}" class="list-group-item list-group-item-action lh-sm">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">{{type.name}}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+                {% for tag in tags %}
+                    <a href="{% url 'get_tag' tag.slug %}" class="list-group-item list-group-item-action lh-sm" aria-current="true">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">{{tag.name}}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+                {% for mark in marks %}
+                    <a href="{% url 'get_mark' mark.slug %}" class="list-group-item list-group-item-action lh-sm">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">{{mark.name}}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+                {% for kind in kinds %}
+                    <a href="{% url 'get_kind' kind.slug %}" class="list-group-item list-group-item-action lh-sm">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">{{kind.name}}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+                {% for time in times %}
+                    <a href="{% url 'get_time' time.slug %}" class="list-group-item list-group-item-action lh-sm">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <strong class="mb-1">{{time.duration}}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+                <span class="border border-bottom-3 border-info mb-4 mt-4"></span>
+            </div>
+        </div>
+        <main>
+            {% block content %}
+
+            {% endblock %}
+        </main>>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-auto">
+        <div class="container p-4">
+            <!-- Футер -->
+            <p class="text-center">© 2024 My Project</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/filters_recipes.js' %}"></script>
+</body>
+</html>

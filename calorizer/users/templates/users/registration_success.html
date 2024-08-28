@@ -1,0 +1,21 @@
+{% extends "base_no_sidebar.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Вітаємо, {{ user.username }}! Ви успішно зареєструвались.</h2>
+<!--    <p>Welcome {{ user.username }}!</p>-->
+    <p>Ваш профіль:</p>
+    <ul>
+        <li>Ім`я: {{ user.userprofile.first_name }}</li>
+        <li>Прізвище: {{ user.userprofile.last_name }}</li>
+        <li>Email: {{ user.email }}</li>
+        <li>Номер телефону:
+            <ul>
+            {% for phone_number in user.userprofile.phone_numbers.all %}
+                <li>{{ phone_number.number }}</li>
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}

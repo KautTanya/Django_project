@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+        <div class="container mt-4">
+            <h1 class="text-center mt-4">{{kind.name}}</h1>
+<!--            <h2 class="text-center mt-4">Список рецептів у категорії {{category.name}}</h2>-->
+            <div class="row mt-4">
+                {% for recipe in recipes %}
+                    <div class="col-md-6 mb-2">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <p>
+                                    {% for category in recipe.categories.all %}
+                                        <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                        </strong>
+                                    {% endfor %}
+                                </p>
+                                <h3 class="mb-0">{{ recipe.name }}</h3>
+                                <ul class="list-unstyled">
+                                    <li>Калорійність: {{ recipe.calories }} ккал</li>
+                                    <li>Білки: {{ recipe.proteins }} г</li>
+                                    <li>Жири: {{ recipe.fats }} г</li>
+                                    <li>Вуглеводи: {{ recipe.carbohydrates }} г</li>
+                                </ul>
+                                <p class="card-text mb-auto">{{ recipe.description|truncatechars:200 }}</p>
+                                <a href="{% url 'recipe_detail' recipe.slug %}" class="icon-link gap-1 icon-link-hover stretched-link">
+                                    Відкрити рецепт
+                                    <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+                                </a>
+                            </div>
+                            <div class="col-auto d-none d-lg-block">
+                                <img src="{% if recipe.image %}{{ recipe.image.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}" class="img-fluid card-img" alt="photo">
+                            </div>
+                        </div>
+                    </div>
+                    {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                        <div class="row"></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+{% endblock %}

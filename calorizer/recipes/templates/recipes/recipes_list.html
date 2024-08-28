@@ -1,58 +1,165 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="1">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Recipes List</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-    <style>
-        .card {
-            display: flex;
-            flex-direction: row;
-            height: 100%;
-        }
-        .card-body {
-            flex: 1;
-        }
-        .card-img {
-            max-width: 200px;
-            max-height: 200px;
-            object-fit: cover;
-        }
-    </style>
-</head>
-<body>
-    <h1 class="text-center mt-4">Список рецептів</h1>
-    <div class="container mt-4">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for recipe in recipes %}
-            <div class="col">
-                <div class="card h-100">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="{% if recipe.image %}{{ recipe.image.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}" class="img-fluid card-img" alt="photo">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ recipe.name }}</h5>
-                                <p class="card-text">Калорійність: {{ recipe.calories }}</p>
-                                <p class="card-text">Білки: {{ recipe.proteins }}</p>
-                                <p class="card-text">Жири: {{ recipe.fats }}</p>
-                                <p class="card-text">Вуглеводи: {{ recipe.carbohydrates }}</p>
+{% block content %}
+
+        <div class="container mt-4">
+            <h1 class="text-center mt-4">Список рецептів</h1>
+
+            <div class="border-wrapper">
+                <h3 class="text-center mt-4 mb-4">Фільтрація рецептів</h3>
+
+                <form method="GET" action="{% url 'recipes_filter' %}" class="mb-4">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть категорії
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for category in categories %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="categories" value="{{ category.slug }}" class="form-check-input type-checkbox"> {{ category.name }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
                             </div>
-                            <div class="card-footer">
-                                <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-primary">Відкрити рецепт</a>
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть типи
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for type in types %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="types" value="{{ type.slug }}" class="form-check-input type-checkbox"> {{ type.name }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть теги
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for tag in tags %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="tags" value="{{ tag.slug }}" class="form-check-input type-checkbox"> {{ tag.name }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть мітки
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for mark in marks %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="marks" value="{{ mark.slug }}" class="form-check-input type-checkbox"> {{ mark.name }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть види
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for kind in kinds %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="kinds" value="{{ kind.slug }}" class="form-check-input type-checkbox"> {{ kind.name }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Оберіть час
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% for time in times %}
+                                        <li>
+                                            <label class="dropdown-item">
+                                                <input type="checkbox" name="times" value="{{ time.slug }}" class="form-check-input type-checkbox"> {{ time.duration }}
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <div id="selected-types" class="mt-2"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Фільтрувати</button>
+                    </div>
+                </div>
+            </form>
+            </div>
+
+
+            <div class="row mt-4">
+                {% for recipe in recipes %}
+                    <div class="col-md-6 mb-2">
+                        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <p>
+                                    {% for category in recipe.categories.all %}
+                                        <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                            {{ category.name }}{% if not forloop.last %}, {% endif %}
+                                        </strong>
+                                    {% endfor %}
+                                </p>
+                                <h3 class="mb-0">{{ recipe.name }}</h3>
+                                <ul class="list-unstyled">
+                                    <li>Калорійність: {{ recipe.calories }} ккал</li>
+                                    <li>Білки: {{ recipe.proteins }} г</li>
+                                    <li>Жири: {{ recipe.fats }} г</li>
+                                    <li>Вуглеводи: {{ recipe.carbohydrates }} г</li>
+                                </ul>
+                                <p class="card-text mb-auto">{{ recipe.description|truncatechars:200 }}</p>
+                                <a href="{% url 'recipe_detail' recipe.slug %}" class="icon-link gap-1 icon-link-hover stretched-link">
+                                    Відкрити рецепт
+                                    <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
+                                </a>
+                            </div>
+                            <div class="col-auto d-none d-lg-block">
+                                <img src="{% if recipe.image %}{{ recipe.image.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}" class="img-fluid card-img" alt="photo">
                             </div>
                         </div>
                     </div>
-                </div>
+                    {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                        <div class="row"></div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-</body>
-</html>
+
+{% endblock %}

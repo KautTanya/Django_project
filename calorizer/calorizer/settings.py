@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
     'menu.apps.MenuConfig',
     'users.apps.UsersConfig',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [

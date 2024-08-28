@@ -1,0 +1,65 @@
+{% extends "base_no_sidebar.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center">Реєстрація</h2>
+    <div class="form-container">
+        <form method="post" enctype="multipart/form-data" autocomplete="off">
+            {% csrf_token %}
+            <div>
+                {% for field in user_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field}}
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                {% for field in profile_form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field}}
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div>
+                <h5>Phone Numbers</h5>
+                {{ phone_formset.management_form }}
+                <div id="phone-numbers">
+                    {% for form in phone_formset %}
+                        <div class="phone-number">
+                            {% for field in form %}
+                               {% if field.name != 'DELETE' and field.name != 'id' and field.name != 'profile' %}
+                                    <div class="form-group">
+                                        {{ field.label_tag }} {{ field}}
+                                        {% if field.errors %}
+                                            <div class="text-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if forloop.last %}
+                                <button type="button" class="btn btn-secondary ml-2" onclick="addPhoneNumber()">Add another phone number</button>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+<!--            <button type="button" class="btn btn-secondary" onclick="addPhoneNumber()">Додати ще номер телефону</button>-->
+            <button type="submit" class="btn btn-primary">Відправити</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
